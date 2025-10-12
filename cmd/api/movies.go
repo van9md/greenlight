@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/van9md/greenlight/internal/data"
 	"net/http"
 	"time"
+
+	"github.com/van9md/greenlight/internal/data"
 )
 
 func (app *application) createMoviesHandler(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +18,7 @@ func (app *application) createMoviesHandler(w http.ResponseWriter, r *http.Reque
 	}
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
-		app.errorResponse(w, r, http.StatusBadRequest, err)
+		app.errorResponse(w, r, http.StatusBadRequest, error.Error(err))
 		return
 	}
 	fmt.Fprintf(w, "%+v\n", input)
