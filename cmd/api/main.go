@@ -11,6 +11,7 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
+	"github.com/van9md/greenlight/internal/data"
 )
 
 const version = "1.0.0"
@@ -29,6 +30,7 @@ type config struct {
 type application struct {
 	config config
 	logger *slog.Logger
+	models data.Models
 }
 
 func main() {
@@ -53,6 +55,7 @@ func main() {
 	app := application{
 		logger: logger,
 		config: cfg,
+		models: data.NewModels(db),
 	}
 
 	mux := http.NewServeMux()
