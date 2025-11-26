@@ -2,11 +2,9 @@ package main
 
 import (
 	"errors"
-	"fmt"
-	"net/http"
-
 	"github.com/van9md/greenlight/internal/data"
 	"github.com/van9md/greenlight/internal/validator"
+	"net/http"
 )
 
 func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -50,17 +48,12 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	go func() {
-		defer func() {
-			if err := recover(); err != nil {
-				app.logger.Error(fmt.Sprintf("%v", err))
-			}
-		}()
+	app.background(func() {
 		err = app.mailer.Send(user.Email, "user_welcome.tmpl", user)
 		if err != nil {
 			app.logger.Error(err.Error())
 		}
-	}()
+	})
 
 	err = app.writeJSON(w, http.StatusCreated, envelope{"user": user}, nil)
 	if err != nil {
